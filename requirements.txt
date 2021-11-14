@@ -1,1 +1,6 @@
 nose
+pysimplegui
+requests
+pypdf2
+pytesseract
+pdf2image
