@@ -90,3 +90,11 @@ ENV/
 
 # Mac related files
 .DS_Store
+
+#app_related excludes
+checker/output/
+checker/output
+checker/file/
+checker/file
+checker/input/*.txt
+
