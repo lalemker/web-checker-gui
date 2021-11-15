@@ -7,7 +7,6 @@ import pytesseract
 import shutil
 import csv
 
-
 #add inbound file with Ticker collection
 scantype='fact-sheet'
 #scantype='monthly-holdings'
@@ -82,9 +81,28 @@ for itm in check_list:
 
   with open(f'{processing_path}/{filename}', 'wb') as pdf_file:
     pdf_file.write(response.content)
-
+  # set processing path to file
   filePath = f'{processing_path}/{fileNameFinal}.pdf'
-  doc = convert_from_path(filePath)
+
+  #validate file is not empty
+  if os.stat(filePath).st_size == 0:
+    print('ERROR -- File is empty')
+    print(f'INFO -- >>>>>>> Capture results for {check_item}. <<<<<<<')
+    data_row['CheckItem'] = check_item
+    data_row['FileURL'] = url_output
+    data_row['SearchText'] = search_text_list_output
+    data_row['Status'] = 'PDF file is empty or erring out'
+    results_list.append(data_row)
+    continue
+  else:
+    print('INFO -- File is not empty, continue processing.')
+  
+  print(f'INFO -- Set up PDF Reader.')
+  # Windows requires setting poppler_path if you don't add poppler to PATH environment variable
+  doc = convert_from_path(pdf_path=filePath, poppler_path="C:/poppler-0.68.0_x86/poppler-0.68.0/bin")
+  # if poppler is installed and available in Path or environment settings, use this
+  # doc = convert_from_path(pdf_path=filePath)
+
   path, fileName = os.path.split(filePath)
   fileBaseName, fileExtension = os.path.splitext(fileName)
   # print(f'information about doc - {doc}')
